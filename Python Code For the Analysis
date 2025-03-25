@@ -1,0 +1,64 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Dataset
+df = pd.read_csv(r"C:\Users\nithe\Downloads\Zomato data .csv")  # Replace with actual file name
+
+# Display basic information about the dataset
+print(df.info())
+print(df.head())
+
+# Data Cleaning & Preprocessing
+# Dropping duplicates and handling missing values
+df.drop_duplicates(inplace=True)
+df.dropna(inplace=True)
+
+# Converting date column to datetime format
+df['date'] = pd.to_datetime(df['date'])
+
+# Understanding the Business Problems
+# Example: Analyzing restaurant types, sales trends, ratings, etc.
+
+# Question 1: Count Plot - Number of Restaurants by Type
+plt.figure(figsize=(10,5))
+sns.countplot(x='restaurant_type', data=df, order=df['restaurant_type'].value_counts().index)
+plt.xticks(rotation=45)
+plt.title("Number of Restaurants by Type")
+plt.show()
+
+# Question 2: Line Graph - Sales Trend Over Time
+plt.figure(figsize=(12,6))
+df.groupby('date')['sales'].sum().plot()
+plt.xlabel('Date')
+plt.ylabel('Total Sales')
+plt.title('Sales Trend Over Time')
+plt.show()
+
+# Question 3: Histogram - Distribution of Ratings
+plt.figure(figsize=(8,5))
+sns.histplot(df['rating'], bins=10, kde=True)
+plt.title("Distribution of Restaurant Ratings")
+plt.show()
+
+# Question 4: Bar Graph - Average Cost for Two Across Cities
+plt.figure(figsize=(12,6))
+df.groupby('city')['cost_for_two'].mean().sort_values(ascending=False).plot(kind='bar')
+plt.xlabel("City")
+plt.ylabel("Average Cost for Two")
+plt.title("Average Cost for Two Across Cities")
+plt.show()
+
+# Question 5: Box Plot - Cost for Two vs City
+plt.figure(figsize=(12,6))
+sns.boxplot(x='city', y='cost_for_two', data=df)
+plt.xticks(rotation=45)
+plt.title("Cost for Two by City")
+plt.show()
+
+# Question 6: Heatmap - Correlation Matrix
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Feature Correlation Heatmap")
+plt.show()
